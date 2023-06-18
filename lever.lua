@@ -1,13 +1,5 @@
 -- -*- mode: lua tab-width: 2 indent-tabs-mode: 1 st-rulers: [70] -*-
 -- vim: ts=4 sw=4 ft=lua noet
----------------------------------------------------------------------
--- @author Daniel Barney <daniel@pagodabox.com>
--- @copyright 2014, Pagoda Box, Inc.
--- @doc
---
--- @end
--- Created :   3 Sept 2014 by Daniel Barney <daniel@pagodabox.com>
----------------------------------------------------------------------
 
 local http = require('http')
 local querystring = require('querystring')
@@ -17,7 +9,7 @@ local Lever = {}
 Lever.__index = Lever
 
 function Lever.new ()
-	local self = 
+	local self =
         {cbs = {}
         ,middleware = {}}
     self = setmetatable(self, Lever)
@@ -58,13 +50,13 @@ function Lever:add_route(method,path,...)
     	-- print("test:",c,c:sub(2,2))
     	if c:sub(2,2) == "?" then
     		-- print("matching",path,c)
-    		
+
     		matches[#matches + 1] = c:sub(3,c:len())
 
     		fields[#fields + 1] = "?"
     	else
     		-- print("inserting",path,c)
-	    	fields[#fields + 1] = c 
+	    	fields[#fields + 1] = c
 	    end
     end
 
@@ -158,7 +150,7 @@ function Lever:listen(port,ip)
 	end
 	local lever = self
 	self.server = http.createServer(function (req, res)
-	  
+
 	  res:on("error", function(err)
 	    msg = tostring(err)
 	    -- print("Error while sending a response: " .. msg)
@@ -166,16 +158,16 @@ function Lever:listen(port,ip)
 
       local path,qs = req.url:match("([^?]+)(|?(.*))")
 	  local route_stack, env = find_route(lever,req.method,path)
-	  
+
 	  local stack = concat({},self.middleware);
-	  
+
 	  if route_stack then
         if qs then
             req.qs = querystring.parse(qs:sub(2,qs:len()))
         else
             req.qs = {}
         end
-		  	
+
 		  	req.env = env
 		  	req.user = {}
 
@@ -186,7 +178,7 @@ function Lever:listen(port,ip)
 		    res:finish()
 		  end
 	  end
-      
+
       handle_stack(stack,req,res)
 
 	end)
